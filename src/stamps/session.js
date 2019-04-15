@@ -27,7 +27,7 @@ const stamp = stampit({
     function resolveSessionKey(sessionKey) {
       // update the context of this client, adding the session key
       if (instance.config.sessionKey !== sessionKey) {
-        // performing shallow comparison to avoid useless onSessionKeyChanged invocations
+        // performing comparison to avoid useless `onSessionKeyChanged` invocations
         instance.config.sessionKey = sessionKey;
       }
       // we're no longer creating a session
