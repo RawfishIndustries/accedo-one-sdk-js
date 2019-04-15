@@ -1,5 +1,5 @@
 const sessionStamp = require('./session');
-const { grab } = require('../apiHelper');
+const api = require('../apiHelper');
 
 // Make sure we have the sessionStamp withSessionHandling method
 const stamp = sessionStamp.compose({
@@ -9,7 +9,7 @@ const stamp = sessionStamp.compose({
      * @return {promise}  a promise of the requested data
      */
     getProfileInfo() {
-      return this.withSessionHandling(() => grab('/profile', this.config));
+      return this.withSessionHandling(() => api.grab('/profile', this.config));
     },
   },
 });

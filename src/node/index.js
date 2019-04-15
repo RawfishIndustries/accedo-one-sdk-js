@@ -13,6 +13,7 @@ const stamp = commonStamps.compose(appLogNode);
  * @param  {string} config.appKey the application Key
  * @param  {string} [config.deviceId] the device identifier (if not provided, a uuid will be generated instead)
  * @param  {string} [config.sessionKey] the sessionKey (note a new one may be created when not given or expired)
+ * @param  {string} [config.reuseSession] makes all client instances reuse the same session when truthy (for node)
  * @param  {string} [config.ip] the user's IP, given to Accedo One for every request this client will trigger (for geolocation).
  * @param  {function} [config.log] a function to use to see this SDK's logs
  * @param  {function} [config.onDeviceIdGenerated] callback to obtain the new deviceId, if one gets generated
