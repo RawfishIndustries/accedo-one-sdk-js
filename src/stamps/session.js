@@ -1,5 +1,5 @@
 const stampit = require('@stamp/it');
-const { grab } = require('../apiHelper');
+const api = require('../apiHelper');
 
 // Make sure we have the sessionStamp withSessionHandling method AND appLogCommon
 const stamp = stampit({
@@ -24,7 +24,8 @@ const stamp = stampit({
       }
 
       // launch a request, update the promise
-      creatingSessionPromise = grab('/session', instance.config)
+      creatingSessionPromise = api
+        .grab('/session', instance.config)
         .then(json => {
           const { sessionKey } = json;
           // update the context of this client, adding the session key

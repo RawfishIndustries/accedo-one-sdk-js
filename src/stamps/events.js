@@ -1,5 +1,5 @@
 const sessionStamp = require('./session');
-const { post } = require('../apiHelper');
+const api = require('../apiHelper');
 
 function sendUsageEvent(eventType, retentionTime) {
   const payload = { eventType };
@@ -7,7 +7,7 @@ function sendUsageEvent(eventType, retentionTime) {
     payload.retentionTime = retentionTime;
   }
   return this.withSessionHandling(() =>
-    post('/event/log', this.config, payload)
+    api.post('/event/log', this.config, payload)
   );
 }
 

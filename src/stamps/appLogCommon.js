@@ -1,5 +1,5 @@
 const sessionStamp = require('./session');
-const { grab, post } = require('../apiHelper');
+const api = require('../apiHelper');
 
 const DEBUG = 'debug';
 const INFO = 'info';
@@ -24,12 +24,12 @@ const getLogEvent = (details = {}, metadata) => {
 };
 
 function request(path) {
-  return this.withSessionHandling(() => grab(path, this.config));
+  return this.withSessionHandling(() => api.grab(path, this.config));
 }
 
 function postLogs(logs) {
   return this.withSessionHandling(() =>
-    post('/application/logs', this.config, logs)
+    api.post('/application/logs', this.config, logs)
   );
 }
 
