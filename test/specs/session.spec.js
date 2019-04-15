@@ -114,18 +114,13 @@ describe('Session API Tests', () => {
         const clients = getTestClients(true);
         const spy = jest.spyOn(apiHelper, 'grab');
         const promises = clients.map(c => c.createSession());
-        return Promise.all(promises)
-          .then(() => {
-            const sessionCalls = spy.mock.calls.filter(
-              ([path]) => path === '/session'
-            );
-            expect(sessionCalls.length).toBe(1);
-            spy.mockRestore();
-          })
-          .catch(error => {
-            console.error(error);
-            throw error;
-          });
+        return Promise.all(promises).then(() => {
+          const sessionCalls = spy.mock.calls.filter(
+            ([path]) => path === '/session'
+          );
+          expect(sessionCalls.length).toBe(1);
+          spy.mockRestore();
+        });
       });
     });
   });
