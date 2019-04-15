@@ -32,6 +32,16 @@ describe('Session API Tests', () => {
     expect(typeof key).toBe('string');
   });
 
+  describe('With truthy sessionKeyInQueryString flag...', () => {
+    test('should have empty headers', () => {});
+    test('should have sessionKey in query params', () => {});
+  });
+
+  describe('With falsy sessionKeyInQueryString flag...', () => {
+    test('should have X-SESSION header', () => {});
+    test('should have no sessionKey in query params', () => {});
+  });
+
   describe('With concurrent calls by one same client...', () => {
     const onSessionKeyChangedB = jest.fn();
     const clientB = factory({
