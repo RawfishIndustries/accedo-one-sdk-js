@@ -27,7 +27,7 @@ describe('"sessionKeyInQueryString" flag Tests...', () => {
   describe('With truthy sessionKeyInQueryString flag...', () => {
     const client = makeClient(true);
 
-    test('should have empty headers', () => {
+    test('should have no "X-SESSION" header', () => {
       fetch.mockClear();
       return client.getEntryById(idToFetch).then(() => {
         expect(hasSessionHeader(fetch.mock)).toBeFalsy();
