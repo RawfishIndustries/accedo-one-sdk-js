@@ -1,5 +1,5 @@
 const factory = require('../../src/node/index');
-const apiHelper = require('../../src/apiHelper');
+const fetch = require('isomorphic-unfetch');
 
 describe('Session API Tests', () => {
   const onSessionKeyChanged = jest.fn();
@@ -50,77 +50,6 @@ describe('Session API Tests', () => {
         expect(key1).toBe(key2);
         expect(key1).toBe(key3);
         expect(onSessionKeyChangedB.mock.calls.length).toBe(1);
-      });
-    });
-
-    test('should call session endpoint only once', () => {
-      const spy = jest.spyOn(apiHelper, 'grab');
-      return Promise.all([
-        clientB.createSession(),
-        clientB.createSession(),
-        clientB.createSession(),
-      ]).then(() => {
-        const sessionCalls = spy.mock.calls.filter(
-          ([path]) => path === '/session'
-        );
-        expect(sessionCalls.length).toBe(1);
-        spy.mockRestore();
-      });
-    });
-  });
-
-  describe('With concurrent calls by multiple clients...', () => {
-    const numberOfClients = 10;
-    const sessionKey = 'invalidSessionKey';
-    const appKey = '56ea6a370db1bf032c9df5cb';
-    const deviceId = 'gregTestingSDK';
-
-    const getTestClients = reuseSameSession =>
-      [...Array(10).keys()].map(() => {
-        return factory({
-          reuseSameSession,
-          appKey,
-          deviceId,
-          sessionKey,
-        });
-      });
-
-    test('should reuse the same sessionId', () => {
-      const clients = getTestClients();
-      const promises = clients.map(c => c.createSession());
-      return Promise.all(promises).then(() => {
-        const [clientA] = clients;
-        clients.forEach(c =>
-          expect(clientA.getSessionKey()).toBe(c.getSessionKey())
-        );
-      });
-    });
-
-    describe('Should call sessionEndpoint...', () => {
-      test('once for each client, with falsy `reuseSameSession`', () => {
-        const clients = getTestClients();
-        const spy = jest.spyOn(apiHelper, 'grab');
-        const promises = clients.map(c => c.createSession());
-        return Promise.all(promises).then(() => {
-          const sessionCalls = spy.mock.calls.filter(
-            ([path]) => path === '/session'
-          );
-          expect(sessionCalls.length).toBe(numberOfClients);
-          spy.mockRestore();
-        });
-      });
-
-      test('only once, with truthy `reuseSameSession`', () => {
-        const clients = getTestClients(true);
-        const spy = jest.spyOn(apiHelper, 'grab');
-        const promises = clients.map(c => c.createSession());
-        return Promise.all(promises).then(() => {
-          const sessionCalls = spy.mock.calls.filter(
-            ([path]) => path === '/session'
-          );
-          expect(sessionCalls.length).toBe(1);
-          spy.mockRestore();
-        });
       });
     });
   });

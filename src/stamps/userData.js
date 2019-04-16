@@ -1,15 +1,15 @@
 const sessionStamp = require('./session');
-const api = require('../apiHelper');
+const { grab, post } = require('../apiHelper');
 
 const APPLICATION_SCOPE = 'user';
 const APPLICATION_GROUP_SCOPE = 'group';
 
 function requestGet(path) {
-  return this.withSessionHandling(() => api.grab(path, this.config));
+  return this.withSessionHandling(() => grab(path, this.config));
 }
 
 function requestPost(path, data) {
-  return this.withSessionHandling(() => api.post(path, this.config, data));
+  return this.withSessionHandling(() => post(path, this.config, data));
 }
 
 function getAllDataByUser(scope, userName) {

@@ -1,5 +1,5 @@
 const sessionStamp = require('./session');
-const api = require('../apiHelper');
+const { grab } = require('../apiHelper');
 
 // Make sure we have the sessionStamp withSessionHandling method
 const stamp = sessionStamp.compose({
@@ -9,7 +9,7 @@ const stamp = sessionStamp.compose({
      * @return {promise}  a promise of a hash of assets (key: asset name, value: asset URL)
      */
     getAllAssets() {
-      return this.withSessionHandling(() => api.grab('/asset', this.config));
+      return this.withSessionHandling(() => grab('/asset', this.config));
     },
   },
 });

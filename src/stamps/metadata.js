@@ -1,8 +1,8 @@
 const sessionStamp = require('./session');
-const api = require('../apiHelper');
+const { grab } = require('../apiHelper');
 
 function request(path) {
-  return this.withSessionHandling(() => api.grab(path, this.config));
+  return this.withSessionHandling(() => grab(path, this.config));
 }
 
 // Make sure we have the sessionStamp withSessionHandling method

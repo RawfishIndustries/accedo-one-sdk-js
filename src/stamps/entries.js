@@ -1,6 +1,6 @@
 const qs = require('qs');
 const sessionStamp = require('./session');
-const api = require('../apiHelper');
+const { grab } = require('../apiHelper');
 
 function getPathWithQs(path, params = {}) {
   const {
@@ -46,7 +46,7 @@ function getPathWithQs(path, params = {}) {
 
 function request(path, params) {
   const pathWithQs = getPathWithQs(path, params);
-  return this.withSessionHandling(() => api.grab(pathWithQs, this.config));
+  return this.withSessionHandling(() => grab(pathWithQs, this.config));
 }
 
 // Make sure we have the sessionStamp withSessionHandling method AND appLogCommon
