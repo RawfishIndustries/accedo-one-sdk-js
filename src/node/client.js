@@ -17,7 +17,14 @@ const checkUsability = ({ appKey, deviceId, sessionKey } = {}) =>
 
 // Refer to `./index` for the doc
 const makeAccedoOne = stamp => config => {
-  const { gid, appKey, ip, target, sessionKeyInQueryString } = config;
+  const {
+    gid,
+    appKey,
+    ip,
+    target,
+    reuseSameSession,
+    sessionKeyInQueryString,
+  } = config;
   const {
     log = noop,
     onDeviceIdGenerated = noop,
@@ -48,6 +55,7 @@ const makeAccedoOne = stamp => config => {
     appKey,
     target,
     log,
+    reuseSameSession,
     onSessionKeyChanged,
     sessionKeyInQueryString,
   };

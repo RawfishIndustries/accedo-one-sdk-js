@@ -1,11 +1,41 @@
 const stampit = require('@stamp/it');
 const { grab } = require('../apiHelper');
 
+let globalSessionPromise = null;
+
 // Make sure we have the sessionStamp withSessionHandling method AND appLogCommon
 const stamp = stampit({
   init(_, { instance }) {
     // the promise of a session being created
     let creatingSessionPromise;
+
+    function getSessionPromise() {
+      // if `reuseSameSession` is truthy, reuse the same promise to get a session
+      return instance.config.reuseSameSession
+        ? globalSessionPromise
+        : creatingSessionPromise;
+    }
+
+    function setSessionPromise(promise) {
+      // if `reuseSameSession` is truthy, sets the global promise instead of the client-specific one
+      if (instance.config.reuseSameSession) {
+        globalSessionPromise = promise;
+      } else {
+        creatingSessionPromise = promise;
+      }
+    }
+
+    function resolveSessionKey(sessionKey) {
+      // update the context of this client, adding the session key
+      if (instance.config.sessionKey !== sessionKey) {
+        // performing comparison to avoid useless `onSessionKeyChanged` invocations
+        instance.config.sessionKey = sessionKey;
+      }
+      // we're no longer creating a session
+      setSessionPromise(null);
+      return sessionKey;
+    }
+
     /**
      * Create a session and store it for reuse in this client instance
      * Note you do not usually need to worry about this. Other methods will call
@@ -13,9 +43,10 @@ const stamp = stampit({
      * @return {promise}  a promise of a string, the sessionKey
      */
     instance.createSession = function createSession() {
+      const sessionPromise = getSessionPromise();
       // if we have a promise of a session, return it
-      if (creatingSessionPromise) {
-        return creatingSessionPromise;
+      if (sessionPromise) {
+        return sessionPromise.then(resolveSessionKey);
       }
 
       // ignore any existing session
@@ -24,22 +55,18 @@ const stamp = stampit({
       }
 
       // launch a request, update the promise
-      creatingSessionPromise = grab('/session', instance.config)
-        .then(json => {
-          const { sessionKey } = json;
-          // update the context of this client, adding the session key
-          instance.config.sessionKey = sessionKey;
-          // we're no longer creating a session
-          creatingSessionPromise = null;
-          return sessionKey;
-        })
+      const promise = grab('/session', instance.config)
+        .then(({ sessionKey }) => sessionKey)
+        .then(resolveSessionKey)
         .catch(err => {
           // we're no longer creating a session
-          creatingSessionPromise = null;
+          setSessionPromise(null);
           throw err;
         });
 
-      return creatingSessionPromise;
+      setSessionPromise(promise);
+
+      return getSessionPromise();
     };
   },
   methods: {
