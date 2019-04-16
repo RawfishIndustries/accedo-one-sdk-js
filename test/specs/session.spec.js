@@ -75,10 +75,10 @@ describe('Session API Tests', () => {
     const appKey = '56ea6a370db1bf032c9df5cb';
     const deviceId = 'gregTestingSDK';
 
-    const getTestClients = reuseSession =>
+    const getTestClients = reuseSameSession =>
       [...Array(10).keys()].map(() => {
         return factory({
-          reuseSession,
+          reuseSameSession,
           appKey,
           deviceId,
           sessionKey,
@@ -97,7 +97,7 @@ describe('Session API Tests', () => {
     });
 
     describe('Should call sessionEndpoint...', () => {
-      test('once for each client, with falsy `reuseSession`', () => {
+      test('once for each client, with falsy `reuseSameSession`', () => {
         const clients = getTestClients();
         const spy = jest.spyOn(apiHelper, 'grab');
         const promises = clients.map(c => c.createSession());
@@ -110,7 +110,7 @@ describe('Session API Tests', () => {
         });
       });
 
-      test('only once, with truthy `reuseSession`', () => {
+      test('only once, with truthy `reuseSameSession`', () => {
         const clients = getTestClients(true);
         const spy = jest.spyOn(apiHelper, 'grab');
         const promises = clients.map(c => c.createSession());

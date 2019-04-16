@@ -10,14 +10,14 @@ const stamp = stampit({
     let creatingSessionPromise;
 
     function getSessionPromise() {
-      // if `reuseSession` is truthy, reuse the same promise to get a session
-      return instance.config.reuseSession
+      // if `reuseSameSession` is truthy, reuse the same promise to get a session
+      return instance.config.reuseSameSession
         ? globalSessionPromise
         : creatingSessionPromise;
     }
 
     function setSessionPromise(promise) {
-      if (instance.config.reuseSession) {
+      if (instance.config.reuseSameSession) {
         globalSessionPromise = promise;
       } else {
         creatingSessionPromise = promise;
