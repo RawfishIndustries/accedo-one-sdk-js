@@ -17,6 +17,7 @@ const stamp = stampit({
     }
 
     function setSessionPromise(promise) {
+      // if `reuseSameSession` is truthy, sets the global promise instead of the client-specific one
       if (instance.config.reuseSameSession) {
         globalSessionPromise = promise;
       } else {
