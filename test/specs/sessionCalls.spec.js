@@ -2,7 +2,6 @@ const factory = require('../../src/node/index');
 const fetch = require('isomorphic-unfetch');
 
 const numberOfClients = 10;
-const sessionKey = 'invalidSessionKey';
 const appKey = '56ea6a370db1bf032c9df5cb';
 const deviceId = 'gregTestingSDK';
 
@@ -19,7 +18,6 @@ const makeClients = reuseSameSession => {
       reuseSameSession,
       appKey,
       deviceId,
-      sessionKey,
     })
   );
 };
