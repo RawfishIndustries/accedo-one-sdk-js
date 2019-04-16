@@ -1,5 +1,4 @@
 const factory = require('../../src/node/index');
-const fetch = require('isomorphic-unfetch');
 
 describe('Session API Tests', () => {
   const onSessionKeyChanged = jest.fn();

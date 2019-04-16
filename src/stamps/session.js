@@ -1,5 +1,5 @@
 const stampit = require('@stamp/it');
-const api = require('../apiHelper');
+const { grab } = require('../apiHelper');
 
 let globalSessionPromise = null;
 
@@ -54,8 +54,7 @@ const stamp = stampit({
       }
 
       // launch a request, update the promise
-      const promise = api
-        .grab('/session', instance.config)
+      const promise = grab('/session', instance.config)
         .then(({ sessionKey }) => sessionKey)
         .then(resolveSessionKey)
         .catch(err => {
