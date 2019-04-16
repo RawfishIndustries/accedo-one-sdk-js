@@ -17,6 +17,7 @@ const stamp = commonStamps.compose(appLogNode);
  * @param  {string} [config.ip] the user's IP, given to Accedo One for every request this client will trigger (for geolocation).
  * @param  {function} [config.log] a function to use to see this SDK's logs
  * @param  {function} [config.onDeviceIdGenerated] callback to obtain the new deviceId, if one gets generated
+ * @param  {boolean} [config.sessionKeyInQueryString] when truthy, will pass sessionKey in query string instead of X-SESSION header
  * @param  {function} [config.onSessionKeyChanged] callback to obtain the sessionKey, anytime a new one gets generated
  * @param  {string} [config.target] all APIs calls will use this as the base API URL (defaults to the Accedo One API URL)
  * @return {client}        an Accedo One client tied to the given params
