@@ -22,7 +22,7 @@ const makeAccedoOne = stamp => config => {
     appKey,
     ip,
     target,
-    reuseSameSession,
+    useSharedSession,
     sessionKeyInQueryString,
   } = config;
   const {
@@ -55,7 +55,7 @@ const makeAccedoOne = stamp => config => {
     appKey,
     target,
     log,
-    reuseSameSession,
+    useSharedSession,
     onSessionKeyChanged,
     sessionKeyInQueryString,
   };

@@ -1,7 +1,6 @@
 const stampit = require('@stamp/it');
 const { grab } = require('../apiHelper');
-
-let globalSessionPromise = null;
+const { setGlobalSession, getGlobalSession } = require('../globalSession');
 
 // Make sure we have the sessionStamp withSessionHandling method AND appLogCommon
 const stamp = stampit({
@@ -9,21 +8,27 @@ const stamp = stampit({
     // the promise of a session being created
     let creatingSessionPromise;
 
-    function getSessionPromise() {
-      // if `reuseSameSession` is truthy, reuse the same promise to get a session
-      return instance.config.reuseSameSession
-        ? globalSessionPromise
-        : creatingSessionPromise;
+    const { useSharedSession } = instance.config;
+
+    function setClientSession(value) {
+      creatingSessionPromise = value;
     }
 
-    function setSessionPromise(promise) {
-      // if `reuseSameSession` is truthy, sets the global promise instead of the client-specific one
-      if (instance.config.reuseSameSession) {
-        globalSessionPromise = promise;
-      } else {
-        creatingSessionPromise = promise;
-      }
+    function getClientSession() {
+      return creatingSessionPromise;
     }
+
+    /*
+     if useSharedSession is truthy, use functions to get & set 
+     a global session promise instead of the client specific one
+    */
+    const setSessionPromise = useSharedSession
+      ? setGlobalSession
+      : setClientSession;
+
+    const getSessionPromise = useSharedSession
+      ? getGlobalSession
+      : getClientSession;
 
     function resolveSessionKey(sessionKey) {
       // update the context of this client, adding the session key
@@ -32,7 +37,6 @@ const stamp = stampit({
         instance.config.sessionKey = sessionKey;
       }
       // we're no longer creating a session
-      setSessionPromise(null);
       return sessionKey;
     }
 

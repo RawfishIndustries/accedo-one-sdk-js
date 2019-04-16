@@ -1,24 +1,24 @@
-const factory = require('../../src/node/index');
 const fetch = require('isomorphic-unfetch');
+const factory = require('../../src/node/index');
+const { setGlobalSession } = require('../../src/globalSession');
 
 const numberOfClients = 10;
 const appKey = '56ea6a370db1bf032c9df5cb';
 const deviceId = 'gregTestingSDK';
 
-const makeClient = () => {
+const resetGlobalSession = () => setGlobalSession(null);
+
+const makeClient = useSharedSession => {
   return factory({
     appKey,
     deviceId,
+    useSharedSession,
   });
 };
 
-const makeClients = reuseSameSession => {
+const makeClients = useSharedSession => {
   return [...Array(numberOfClients).keys()].map(() =>
-    factory({
-      reuseSameSession,
-      appKey,
-      deviceId,
-    })
+    makeClient(useSharedSession)
   );
 };
 
@@ -42,7 +42,7 @@ describe('Session service calls Tests...', () => {
   });
 
   describe('With concurrent calls by multiple clients...', () => {
-    test('should make session call once for each client, with falsy `reuseSameSession`', () => {
+    test('should make session call once for each client, with falsy `useSharedSession`', () => {
       fetch.mockClear();
       const clients = makeClients();
       const promises = clients.map(c => c.createSession());
@@ -51,13 +51,31 @@ describe('Session service calls Tests...', () => {
       });
     });
 
-    test('should make session call just once, with truthy `reuseSameSession`', () => {
+    test('should make session call just once, with truthy `useSharedSession`', () => {
+      resetGlobalSession();
       fetch.mockClear();
       const clients = makeClients(true);
       const promises = clients.map(c => c.createSession());
       return Promise.all(promises).then(() => {
         expect(getNumberOfSessionCalls(fetch.mock)).toBe(1);
       });
+    });
+  });
+
+  describe('With client instantiated after a session is created...', () => {
+    test('should make session call just once, with truthy `useSharedSession`', () => {
+      resetGlobalSession();
+      fetch.mockClear();
+      const clientA = makeClient(true);
+      return clientA
+        .createSession()
+        .then(() => {
+          const clientB = makeClient(true);
+          return clientB.createSession();
+        })
+        .then(() => {
+          expect(getNumberOfSessionCalls(fetch.mock)).toBe(1);
+        });
     });
   });
 });
