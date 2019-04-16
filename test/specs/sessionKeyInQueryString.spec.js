@@ -1,5 +1,5 @@
-const factory = require('../../src/node/index');
 const fetch = require('isomorphic-unfetch');
+const factory = require('../../src/node/index');
 
 const idToFetch = '56ea7bd6935f75032a2fd431';
 
