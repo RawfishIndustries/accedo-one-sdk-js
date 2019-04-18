@@ -78,4 +78,22 @@ describe('Session service calls Tests...', () => {
         });
     });
   });
+
+  describe('After session invalidation...', () => {
+    test('should invalidate and refresh global session, with truthy `useSharedSession`', () => {
+      resetGlobalSession();
+      fetch.mockClear();
+      const client = makeClient(true);
+      return client
+        .getAllMetadata()
+        .then(() => {
+          client.config.sessionKey = 'invalidSessionKey';
+          setGlobalSession(Promise.resolve('invalidSessionKey'));
+          return client.getAllMetadata();
+        })
+        .then(() => {
+          expect(getNumberOfSessionCalls(fetch.mock)).toBe(2);
+        });
+    });
+  });
 });

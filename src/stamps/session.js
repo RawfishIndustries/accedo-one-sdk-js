@@ -83,6 +83,17 @@ const stamp = stampit({
     },
 
     /**
+     * Cleans the global invalid session if useSharedSession flag is active,
+     * in order to avoid resolving the old global session promise in createSession
+     * @returns {void}
+     */
+    cleanInvalidSession() {
+      if (this.config.useSharedSession) {
+        setGlobalSession(null);
+      }
+    },
+
+    /**
      * If a sessionKey exists, calls the next function, then:
      * - If this failed with a 401 (unauthorized), create a session then retry
      * - Otherwise returns a promise of that function's results
@@ -96,6 +107,8 @@ const stamp = stampit({
       if (this.getSessionKey()) {
         return next().catch(res => {
           if (res && res.status === 401) {
+            // clean global session when necessary
+            this.cleanInvalidSession();
             // session expired - recreate one then retry
             return this.createSession().then(next);
           }
