@@ -94,6 +94,24 @@ const stamp = stampit({
     },
 
     /**
+     * refreshes the session when needed and reperform the
+     * request
+     * @param {object} res the api response
+     * @param {function} next a function that returns a promise
+     * @returns {promise} a promise of the result of the next function
+     */
+    refreshAndRefetchIfNeeded(res, next) {
+      if (res && res.status === 401) {
+        // clean global session when necessary
+        this.cleanInvalidSession();
+        // session expired - recreate one then retry
+        return this.createSession().then(next);
+      }
+      // otherwise propagate the failure
+      throw res;
+    },
+
+    /**
      * If a sessionKey exists, calls the next function, then:
      * - If this failed with a 401 (unauthorized), create a session then retry
      * - Otherwise returns a promise of that function's results
@@ -105,19 +123,21 @@ const stamp = stampit({
     withSessionHandling(next) {
       // existing session
       if (this.getSessionKey()) {
-        return next().catch(res => {
-          if (res && res.status === 401) {
-            // clean global session when necessary
-            this.cleanInvalidSession();
-            // session expired - recreate one then retry
-            return this.createSession().then(next);
-          }
-          // otherwise propagate the failure
-          throw res;
-        });
+        return next().catch(res => this.refreshAndRefetchIfNeeded(res, next));
       }
       // no session - create it first, then launch the next action
-      return this.createSession().then(next);
+      return this.createSession()
+        .then(next)
+        .catch(res => {
+          /* 
+            handle case where global session is invalid and have to refresh
+            at the first request. Otherwise, just throw the error
+          */
+          if (this.config.useSharedSession) {
+            return this.refreshAndRefetchIfNeeded(res, next);
+          }
+          throw res;
+        });
     },
   },
 });
