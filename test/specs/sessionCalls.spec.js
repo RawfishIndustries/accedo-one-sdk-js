@@ -7,6 +7,8 @@ const appKey = '56ea6a370db1bf032c9df5cb';
 const deviceId = 'gregTestingSDK';
 
 const resetGlobalSession = () => setGlobalSession(null);
+const invalidateGlobalSession = () =>
+  setGlobalSession(Promise.resolve('invalidSessionKey'));
 
 const makeClient = useSharedSession => {
   return factory({
@@ -80,7 +82,7 @@ describe('Session service calls Tests...', () => {
   });
 
   describe('After session invalidation, with truthy `useSharedSession...', () => {
-    test('should invalidate and refresh global session, with truthy `useSharedSession`', () => {
+    test('should invalidate and refresh global session', () => {
       resetGlobalSession();
       fetch.mockClear();
       const client = makeClient(true);
@@ -96,16 +98,36 @@ describe('Session service calls Tests...', () => {
         });
     });
 
-    test('should refresh global session, with a newly instantiated client`', () => {
+    test('should refresh global session once, with a new client`', () => {
       resetGlobalSession();
       fetch.mockClear();
       const clientA = makeClient(true);
       return clientA
         .getAllMetadata()
         .then(() => {
-          setGlobalSession(Promise.resolve('invalidSessionKey'));
+          invalidateGlobalSession();
           const clientB = makeClient(true);
           return clientB.getAllMetadata();
+        })
+        .then(() => {
+          expect(getNumberOfSessionCalls(fetch.mock)).toBe(2);
+        });
+    });
+
+    test.only('should refresh global session once, with multiple new clients`', () => {
+      resetGlobalSession();
+      fetch.mockClear();
+      const clientA = makeClient(true);
+      return clientA
+        .getAllMetadata()
+        .then(() => {
+          invalidateGlobalSession();
+          const clientB = makeClient(true);
+          const clientC = makeClient(true);
+          return Promise.all([
+            clientB.getAllMetadata(),
+            clientC.getAllMetadata(),
+          ]);
         })
         .then(() => {
           expect(getNumberOfSessionCalls(fetch.mock)).toBe(2);
