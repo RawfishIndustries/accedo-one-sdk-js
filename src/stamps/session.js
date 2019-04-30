@@ -98,7 +98,7 @@ const stamp = stampit({
               /*
                * refreshing the session only if `getSessionPromise` resolves to
                * the same value as before. This is necessary to avoid duplicating
-               * session requests while performing multiple concurrent data requests.
+               * session requests while performing multiple concurrent data fetching.
                */
               this.setSessionPromise(null);
               this.config.sessionKey = null;
