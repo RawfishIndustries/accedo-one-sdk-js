@@ -77,7 +77,7 @@ const stamp = stampit({
      * @private
      * @return {void}
      */
-    invalidateSession() {
+    clearCurrentSession() {
       this.config.sessionKey = null;
       this.setSessionPromise(null);
     },
@@ -100,8 +100,7 @@ const stamp = stampit({
                * the same value as before. This is necessary to avoid duplicating
                * session requests while performing concurrent data fetching.
                */
-              this.setSessionPromise(null);
-              this.config.sessionKey = null;
+              this.clearCurrentSession();
               return this.createSession();
             }
             this.config.sessionKey = newSessionKey;
