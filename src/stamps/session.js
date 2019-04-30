@@ -6,39 +6,37 @@ const { setGlobalSession, getGlobalSession } = require('../globalSession');
 const stamp = stampit({
   init(_, { instance }) {
     // the promise of a session being created
-    let creatingSessionPromise;
+    let instanceSessionPromise;
 
     const { useSharedSession } = instance.config;
 
     function setClientSession(value) {
-      creatingSessionPromise = value;
+      instanceSessionPromise = value;
     }
 
     function getClientSession() {
-      return creatingSessionPromise;
+      return instanceSessionPromise;
     }
 
     /*
      if useSharedSession is truthy, use functions to get & set 
      a global session promise instead of the client specific one
     */
-    const setSessionPromise = useSharedSession
+    instance.setSessionPromise = useSharedSession
       ? setGlobalSession
       : setClientSession;
 
-    const getSessionPromise = useSharedSession
+    instance.getSessionPromise = useSharedSession
       ? getGlobalSession
       : getClientSession;
 
-    function resolveSessionKey(sessionKey) {
-      // update the context of this client, adding the session key
+    instance.updateConfigSessionKey = function updateConfigSessionKey(
+      sessionKey
+    ) {
       if (instance.config.sessionKey !== sessionKey) {
-        // performing comparison to avoid useless `onSessionKeyChanged` invocations
         instance.config.sessionKey = sessionKey;
       }
-      // we're no longer creating a session
-      return sessionKey;
-    }
+    };
 
     /**
      * Create a session and store it for reuse in this client instance
@@ -47,30 +45,26 @@ const stamp = stampit({
      * @return {promise}  a promise of a string, the sessionKey
      */
     instance.createSession = function createSession() {
-      const sessionPromise = getSessionPromise();
-      // if we have a promise of a session, return it
-      if (sessionPromise) {
-        return sessionPromise.then(resolveSessionKey);
+      // returns current session promise if present
+      const currentSessionPromise = this.getSessionPromise();
+      if (currentSessionPromise) {
+        return currentSessionPromise;
       }
 
-      // ignore any existing session
-      if (instance.config.sessionKey) {
-        instance.config.sessionKey = null;
-      }
-
-      // launch a request, update the promise
-      const promise = grab('/session', instance.config)
-        .then(({ sessionKey }) => sessionKey)
-        .then(resolveSessionKey)
+      // otherwise launch a request, update the promise
+      const sessionPromise = grab('/session', instance.config)
+        .then(({ sessionKey }) => {
+          this.updateConfigSessionKey(sessionKey);
+          return sessionKey;
+        })
         .catch(err => {
           // we're no longer creating a session
-          setSessionPromise(null);
+          this.setSessionPromise(null);
           throw err;
         });
 
-      setSessionPromise(promise);
-
-      return getSessionPromise();
+      this.setSessionPromise(sessionPromise);
+      return sessionPromise;
     };
   },
   methods: {
@@ -83,31 +77,32 @@ const stamp = stampit({
     },
 
     /**
-     * Cleans the global invalid session if useSharedSession flag is active,
-     * in order to avoid resolving the old global session promise in createSession
-     * @returns {void}
-     */
-    cleanInvalidSession() {
-      if (this.config.useSharedSession) {
-        setGlobalSession(null);
-      }
-    },
-
-    /**
      * refreshes the session when needed and reperform the
      * request
      * @param {object} res the api response
      * @param {function} next a function that returns a promise
      * @returns {promise} a promise of the result of the next function
      */
-    refreshAndRefetchIfNeeded(res, next) {
+    refreshAndRefetch(res, next) {
       if (res && res.status === 401) {
-        // clean global session when necessary
-        this.cleanInvalidSession();
-        // session expired - recreate one then retry
-        return this.createSession().then(next);
+        /* 
+         * authentication error found. 
+         * check if promise still resolves to a new value,
+         * otherwise updates the sessionPromise by creating a new session
+         */
+        return this.getSessionPromise()
+          .then(newSessionKey => {
+            // returns a correct sessionKey
+            if (newSessionKey === this.getSessionKey()) {
+              this.setSessionPromise(null);
+              this.updateConfigSessionKey(null);
+              return this.createSession();
+            }
+            this.updateConfigSessionKey(newSessionKey);
+            return newSessionKey;
+          })
+          .then(next);
       }
-      // otherwise propagate the failure
       throw res;
     },
 
@@ -121,23 +116,14 @@ const stamp = stampit({
      * @return {promise}  a promise of the result of the next function
      */
     withSessionHandling(next) {
-      // existing session
-      if (this.getSessionKey()) {
-        return next().catch(res => this.refreshAndRefetchIfNeeded(res, next));
-      }
-      // no session - create it first, then launch the next action
-      return this.createSession()
-        .then(next)
-        .catch(res => {
-          /* 
-            handle case where global session is invalid and have to refresh
-            at the first request. Otherwise, just throw the error
-          */
-          if (this.config.useSharedSession) {
-            return this.refreshAndRefetchIfNeeded(res, next);
-          }
-          throw res;
-        });
+      return Promise.resolve(this.getSessionPromise()).then(sessionKey => {
+        this.updateConfigSessionKey(sessionKey);
+        if (!sessionKey) {
+          return this.createSession().then(next);
+        }
+
+        return next().catch(res => this.refreshAndRefetch(res, next));
+      });
     },
   },
 });

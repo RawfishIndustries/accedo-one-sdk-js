@@ -52,7 +52,6 @@ describe('Session service calls Tests...', () => {
         expect(getNumberOfSessionCalls(fetch.mock)).toBe(numberOfClients);
       });
     });
-
     test('should make session call just once, with truthy `useSharedSession`', () => {
       resetGlobalSession();
       fetch.mockClear();
@@ -81,7 +80,7 @@ describe('Session service calls Tests...', () => {
     });
   });
 
-  describe('After session invalidation, with truthy `useSharedSession...', () => {
+  describe('After session invalidation, with truthy `useSharedSession`...', () => {
     test('should invalidate and refresh global session', () => {
       resetGlobalSession();
       fetch.mockClear();
@@ -114,7 +113,7 @@ describe('Session service calls Tests...', () => {
         });
     });
 
-    test.only('should refresh global session once, with multiple new clients`', () => {
+    test('should refresh global session once, with multiple new clients`', () => {
       resetGlobalSession();
       fetch.mockClear();
       const clientA = makeClient(true);
