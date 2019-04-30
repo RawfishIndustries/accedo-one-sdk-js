@@ -32,6 +32,13 @@ describe('Session API Tests', () => {
     expect(typeof key).toBe('string');
   });
 
+  test('_invalidateSession should invalidate client session', () => {
+    return client.createSession().then(() => {
+      client._invalidateSession();
+      expect(client.config.sessionKey).toBeNull();
+    });
+  });
+
   describe('With concurrent calls by one same client...', () => {
     const onSessionKeyChangedB = jest.fn();
     const clientB = factory({

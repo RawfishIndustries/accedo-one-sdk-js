@@ -64,7 +64,7 @@ describe('Session service calls Tests...', () => {
   });
 
   describe('With client instantiated after a session is created...', () => {
-    test('should make session call just once, with truthy `useSharedSession`', () => {
+    test('should make session call just once, with truthy `useSharedSession`', () => {
       resetGlobalSession();
       fetch.mockClear();
       const clientA = makeClient(true);
@@ -80,6 +80,25 @@ describe('Session service calls Tests...', () => {
     });
   });
 
+  describe('After session invalidation, with falsy `useSharedSession`...', () => {
+    test('should refresh session only once, with concurrent requests', () => {
+      fetch.mockClear();
+      const client = makeClient();
+      return client
+        .getAllMetadata()
+        .then(() => {
+          client._invalidateSession();
+          return Promise.all([
+            client.getAllMetadata(),
+            client.getAllMetadata(),
+          ]);
+        })
+        .then(() => {
+          expect(getNumberOfSessionCalls(fetch.mock)).toBe(2);
+        });
+    });
+  });
+
   describe('After session invalidation, with truthy `useSharedSession`...', () => {
     test('should invalidate and refresh global session', () => {
       resetGlobalSession();
@@ -88,7 +107,7 @@ describe('Session service calls Tests...', () => {
       return client
         .getAllMetadata()
         .then(() => {
-          client.config.sessionKey = 'invalidSessionKey';
+          client._invalidateSession();
           setGlobalSession(Promise.resolve('invalidSessionKey'));
           return client.getAllMetadata();
         })

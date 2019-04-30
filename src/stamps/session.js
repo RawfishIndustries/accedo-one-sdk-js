@@ -37,6 +37,16 @@ const stamp = stampit({
       this.setSessionPromise(sessionPromise);
       return sessionPromise;
     };
+
+    /**
+     * invalidates client session
+     * @private
+     * @return {void}
+     */
+    instance._invalidateSession = function _invalidateSession() {
+      this.config.sessionKey = null;
+      this.setSessionPromise(null);
+    };
   },
   methods: {
     /**
