@@ -4,50 +4,6 @@ const { setGlobalSession, getGlobalSession } = require('../globalSession');
 
 // Make sure we have the sessionStamp withSessionHandling method AND appLogCommon
 const stamp = stampit({
-  init(_, { instance }) {
-    /**
-     * Create a session and store it for reuse in this client instance
-     * Note you do not usually need to worry about this. Other methods will call
-     * it automatically for you when it is needed.
-     * @return {promise}  a promise of a string, the sessionKey
-     */
-    instance.createSession = function createSession() {
-      /*
-       * return the current session promise if present.
-       * useful in order to avoid requesting a session while already
-       * holding a valid sessionKey
-       */
-      const currentSessionPromise = this.getSessionPromise();
-      if (currentSessionPromise) {
-        return currentSessionPromise;
-      }
-
-      // otherwise launch the session request & update the sessionPromise
-      const sessionPromise = grab('/session', instance.config)
-        .then(({ sessionKey }) => {
-          this.config.sessionKey = sessionKey;
-          return sessionKey;
-        })
-        .catch(err => {
-          // cleans the failed sessionPromise
-          this.setSessionPromise(null);
-          throw err;
-        });
-
-      this.setSessionPromise(sessionPromise);
-      return sessionPromise;
-    };
-
-    /**
-     * invalidates client session
-     * @private
-     * @return {void}
-     */
-    instance._invalidateSession = function _invalidateSession() {
-      this.config.sessionKey = null;
-      this.setSessionPromise(null);
-    };
-  },
   methods: {
     /**
      * Returns the currently stored sessionKey for this client instance
@@ -81,6 +37,49 @@ const stamp = stampit({
     getSessionPromise() {
       const { useSharedSession } = this.config;
       return useSharedSession ? getGlobalSession() : this.sessionPromise;
+    },
+
+    /**
+     * creates a session.
+     * Note you do not usually need to worry about this. Other methods will call
+     * it automatically for you when it is needed.
+     * @return {promise}  a promise of a string, the sessionKey
+     */
+    createSession() {
+      const currentSessionPromise = this.getSessionPromise();
+      /*
+       * return the current session promise if present.
+       * useful in order to avoid requesting a session while already
+       * holding a valid sessionKey
+       */
+      if (currentSessionPromise) {
+        return currentSessionPromise;
+      }
+
+      // otherwise launch the session request & update the sessionPromise
+      const sessionPromise = grab('/session', this.config)
+        .then(({ sessionKey }) => {
+          this.config.sessionKey = sessionKey;
+          return sessionKey;
+        })
+        .catch(err => {
+          // cleans the failed sessionPromise
+          this.setSessionPromise(null);
+          throw err;
+        });
+
+      this.setSessionPromise(sessionPromise);
+      return sessionPromise;
+    },
+
+    /**
+     * invalidates client session
+     * @private
+     * @return {void}
+     */
+    _invalidateSession() {
+      this.config.sessionKey = null;
+      this.setSessionPromise(null);
     },
 
     /**
