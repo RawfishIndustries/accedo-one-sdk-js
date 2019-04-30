@@ -105,36 +105,6 @@
               
                 
                 <li><a
-                  href='#getloglevel'
-                  class="">
-                  getLogLevel
-                  
-                </a>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#sendlog'
-                  class="">
-                  sendLog
-                  
-                </a>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#getsessionkey'
-                  class="">
-                  getSessionKey
-                  
-                </a>
-                
-                </li>
-              
-                
-                <li><a
                   href='#getapplicationstatus'
                   class="">
                   getApplicationStatus
@@ -308,6 +278,26 @@
                   href='#getavailablelocales'
                   class="">
                   getAvailableLocales
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#getloglevel'
+                  class="">
+                  getLogLevel
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#sendlog'
+                  class="">
+                  sendLog
                   
                 </a>
                 
@@ -1102,7 +1092,7 @@ Code examples can be found in the github repository.</p>
   </div>
   
 
-  <p>Create a session and store it for reuse in this client instance
+  <p>creates a session.
 Note you do not usually need to worry about this. Other methods will call
 it automatically for you when it is needed.</p>
 
@@ -1127,281 +1117,6 @@ it automatically for you when it is needed.</p>
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">promise</a></code>:
         a promise of a string, the sessionKey
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-          
-        
-          
-            <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='getloglevel'>
-      getLogLevel
-    </h3>
-    
-    
-  </div>
-  
-
-  <p>Get the current log level</p>
-
-
-  <div class='pre p1 fill-light mt0'>getLogLevel(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">promise</a></div>
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">promise</a></code>:
-        a promise of the log level (string)
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-          
-        
-          
-            <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='sendlog'>
-      sendLog
-    </h3>
-    
-    
-  </div>
-  
-
-  <p>NOTE: the behaviour varies when run on Node.js or on browsers.</p>
-<p>On Node.js, the log will be sent immediately.</p>
-<p>On browsers: add the log to a queue so several logs may be sent as a batch,
-when a predefined total size is reached or after a debouncing delay.
-Whenever the user navigates away, the SDK will also attempt to send
-any queued-up log.</p>
-<p>If the current log level is high enough, lower level logs will be ignored.</p>
-
-
-  <div class='pre p1 fill-light mt0'>sendLog(level: (<code>"debug"</code> | <code>"info"</code> | <code>"warn"</code> | <code>"error"</code>), details: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>, metadata: any?): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">promise</a></div>
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>level</span> <code class='quiet'>((<code>"debug"</code> | <code>"info"</code> | <code>"warn"</code> | <code>"error"</code>))</code>
-	    the log level
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>details</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>)</code>
-	    the log information
-
-          </div>
-          
-          <table class='mt1 mb2 fixed-table h5 col-12'>
-            <colgroup>
-              <col width='30%' />
-              <col width='70%' />
-            </colgroup>
-            <thead>
-              <tr class='bold fill-light'>
-                <th>Name</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody class='mt1'>
-              
-                <tr>
-  <td class='break-word'><span class='code bold'>details.message</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>
-  </td>
-  <td class='break-word'><span>the log message
-</span></td>
-</tr>
-
-
-              
-                <tr>
-  <td class='break-word'><span class='code bold'>details.errorCode</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></code>
-  </td>
-  <td class='break-word'><span>the error code (max 5 digits)
-</span></td>
-</tr>
-
-
-              
-                <tr>
-  <td class='break-word'><span class='code bold'>details.dim1</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>
-  </td>
-  <td class='break-word'><span>the dimension 1 information
-</span></td>
-</tr>
-
-
-              
-                <tr>
-  <td class='break-word'><span class='code bold'>details.dim2</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>
-  </td>
-  <td class='break-word'><span>the dimension 2 information
-</span></td>
-</tr>
-
-
-              
-                <tr>
-  <td class='break-word'><span class='code bold'>details.dim3</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>
-  </td>
-  <td class='break-word'><span>the dimension 3 information
-</span></td>
-</tr>
-
-
-              
-                <tr>
-  <td class='break-word'><span class='code bold'>details.dim4</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>
-  </td>
-  <td class='break-word'><span>the dimension 4 information
-</span></td>
-</tr>
-
-
-              
-            </tbody>
-          </table>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>metadata</span> <code class='quiet'>(any?)</code>
-	    extra metadata (will go through JSON.stringify).
-Can be passed as any number of trailing arguments.
-
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">promise</a></code>:
-        a promise of the success of the operation
-(queuing on browser, posting on Node.js)
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-          
-        
-          
-            <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='getsessionkey'>
-      getSessionKey
-    </h3>
-    
-    
-  </div>
-  
-
-  <p>Returns the currently stored sessionKey for this client instance</p>
-
-
-  <div class='pre p1 fill-light mt0'>getSessionKey(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></div>
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>:
-        the sessionKey, if any
 
       
     
@@ -2618,6 +2333,226 @@ Can be passed as any number of trailing arguments.
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">promise</a></code>:
         a promise of the requested data
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='getloglevel'>
+      getLogLevel
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Get the current log level</p>
+
+
+  <div class='pre p1 fill-light mt0'>getLogLevel(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">promise</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">promise</a></code>:
+        a promise of the log level (string)
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='sendlog'>
+      sendLog
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>NOTE: the behaviour varies when run on Node.js or on browsers.</p>
+<p>On Node.js, the log will be sent immediately.</p>
+<p>On browsers: add the log to a queue so several logs may be sent as a batch,
+when a predefined total size is reached or after a debouncing delay.
+Whenever the user navigates away, the SDK will also attempt to send
+any queued-up log.</p>
+<p>If the current log level is high enough, lower level logs will be ignored.</p>
+
+
+  <div class='pre p1 fill-light mt0'>sendLog(level: (<code>"debug"</code> | <code>"info"</code> | <code>"warn"</code> | <code>"error"</code>), details: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>, metadata: any?): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">promise</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>level</span> <code class='quiet'>((<code>"debug"</code> | <code>"info"</code> | <code>"warn"</code> | <code>"error"</code>))</code>
+	    the log level
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>details</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>)</code>
+	    the log information
+
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>details.message</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>
+  </td>
+  <td class='break-word'><span>the log message
+</span></td>
+</tr>
+
+
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>details.errorCode</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></code>
+  </td>
+  <td class='break-word'><span>the error code (max 5 digits)
+</span></td>
+</tr>
+
+
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>details.dim1</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>
+  </td>
+  <td class='break-word'><span>the dimension 1 information
+</span></td>
+</tr>
+
+
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>details.dim2</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>
+  </td>
+  <td class='break-word'><span>the dimension 2 information
+</span></td>
+</tr>
+
+
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>details.dim3</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>
+  </td>
+  <td class='break-word'><span>the dimension 3 information
+</span></td>
+</tr>
+
+
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>details.dim4</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>
+  </td>
+  <td class='break-word'><span>the dimension 4 information
+</span></td>
+</tr>
+
+
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>metadata</span> <code class='quiet'>(any?)</code>
+	    extra metadata (will go through JSON.stringify).
+Can be passed as any number of trailing arguments.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">promise</a></code>:
+        a promise of the success of the operation
+(queuing on browser, posting on Node.js)
 
       
     

@@ -32,6 +32,13 @@ describe('Session API Tests', () => {
     expect(typeof key).toBe('string');
   });
 
+  test('clearCurrentSession should clear the client sessionKey', () => {
+    return client.createSession().then(() => {
+      client.clearCurrentSession();
+      expect(client.config.sessionKey).toBeNull();
+    });
+  });
+
   describe('With concurrent calls by one same client...', () => {
     const onSessionKeyChangedB = jest.fn();
     const clientB = factory({

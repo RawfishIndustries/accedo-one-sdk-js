@@ -61,8 +61,11 @@ const makeAccedoOne = stamp => config => {
   };
   Object.defineProperty(stampConfig, 'sessionKey', {
     set(val) {
-      sessionKey = val;
-      onSessionKeyChanged(val);
+      // check if value is actually changed before calling `onSessionKeyChanged`
+      if (val !== sessionKey) {
+        sessionKey = val;
+        onSessionKeyChanged(val);
+      }
     },
     get() {
       return sessionKey;
