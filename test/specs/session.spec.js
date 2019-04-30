@@ -32,9 +32,9 @@ describe('Session API Tests', () => {
     expect(typeof key).toBe('string');
   });
 
-  test('_invalidateSession should invalidate client session', () => {
+  test('invalidateSession should invalidate client session', () => {
     return client.createSession().then(() => {
-      client._invalidateSession();
+      client.invalidateSession();
       expect(client.config.sessionKey).toBeNull();
     });
   });

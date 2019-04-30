@@ -87,7 +87,7 @@ describe('Session service calls Tests...', () => {
       return client
         .getAllMetadata()
         .then(() => {
-          client._invalidateSession();
+          client.invalidateSession();
           return Promise.all([
             client.getAllMetadata(),
             client.getAllMetadata(),
@@ -107,7 +107,7 @@ describe('Session service calls Tests...', () => {
       return client
         .getAllMetadata()
         .then(() => {
-          client._invalidateSession();
+          client.invalidateSession();
           setGlobalSession(Promise.resolve('invalidSessionKey'));
           return client.getAllMetadata();
         })

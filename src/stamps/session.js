@@ -77,7 +77,7 @@ const stamp = stampit({
      * @private
      * @return {void}
      */
-    _invalidateSession() {
+    invalidateSession() {
       this.config.sessionKey = null;
       this.setSessionPromise(null);
     },
