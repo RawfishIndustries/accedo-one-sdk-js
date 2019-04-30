@@ -113,7 +113,7 @@ const stamp = stampit({
     },
 
     /**
-     * If sessionPromise is valorized, calls the next function, then:
+     * If sessionKey is found trough sessionPromise, calls the next function, then:
      * - If this failed with a 401 (unauthorized), create a session then retry
      * - Otherwise returns a promise of that function's results
      * If there was no sessionKey, create a session before attempting the next function.
