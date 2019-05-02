@@ -1,4 +1,4 @@
-# Accedo One SDK for Node.js and browsers [![npm](https://img.shields.io/npm/v/@accedo/accedo-one.svg?maxAge=3600)](https://www.npmjs.com/package/@accedo/accedo-one)
+# Accedo One SDK for Node.js and browsers [![npm](https://img.shields.io/npm/v/@accedo/accedo-one.svg?maxAge=3600)](https://www.npmjs.com/package/@rawfishindustries/accedo-one)
 
 ```
    _                    _           ___
@@ -11,7 +11,7 @@
 
 ## Summary
 
-This is the official [Accedo One](https://www.accedo.tv/one) SDK for Node.js and browsers, previously known as the AppGrid JS SDK.
+Rawfish fork of the official [Accedo One](https://www.accedo.tv/one) SDK for Node.js and browsers, previously known as the AppGrid JS SDK.
 While Accedo One exposes a set of friendly REST APIs, this SDK is intended to provide a smoother experience when coding in JS.
 It also encourages the use of best practices (for example: reusing the same sessionId for a client, but different clients for different devices).
 
@@ -45,26 +45,23 @@ The default factory exposed by this SDK allows creating a client instance tied t
   - caches the log level for 3 minutes
   - on browsers, individual logs are only sent when necessary (i.e. when the log's level is equal or higher than the current level set on the app), and automatically grouped then sent as a batch (see the `sendLog` doc)
 
-:information_source: _For Node, an [express-compatible middleware is also available as a separate package](https://github.com/Accedo-Products/accedo-one-sdk-express).
-You should really consider using it if possible, as it makes things even easier and provides extra features._
-
 ## Documentation
 
-Refer to the [API docs for this SDK](https://accedo-products.github.io/accedo-one-sdk-js/).
+Refer to the [API docs for this SDK](https://rawfishindustries.github.io/accedo-one-sdk-js/).
 
 You may also want to refer to the [Accedo One Rest API documentation](https://developer.one.accedo.tv/) that this SDK uses behind the scenes. Accedo One-specific terminology is defined there.
 
 ## Installation
 
-`npm install --save @accedo/accedo-one` (or, for yarn users: `yarn add @accedo/accedo-one`)
+`npm install --save @@rawfishindustries/accedo-one` (or, for yarn users: `yarn add @rawfishindustries/accedo-one`)
 
 Then you can use the default export to get a factory:
 ```js
-const accedoOne = require('@accedo/accedo-one')
+const accedoOne = require('@rawfishindustries/accedo-one')
 ```
 Or, using the ES6 module syntax:
 ```js
-import accedoOne from '@accedo/accedo-one'
+import accedoOne from '@rawfishindustries/accedo-one'
 ```
 
 ## Examples
@@ -72,15 +69,13 @@ Below are a few examples, refer to `example-node.js` for more of them that you c
 
 ### Create an Accedo One client instance
 
-:point_right: _On Node, we recommend you use the [Express middleware](https://github.com/Accedo-Products/accedo-one-sdk-express) instead, as it makes it easier and enforces some more best practices._
-
 An instance of an Accedo One client must be obtained. It's created with the factory exported as the default export in this library, with parameters for the specific client you need.
 
 ```javascript
 // This is an Accedo One client factory - name it "factory", "accedoOne", or anything else.
 // If you use this library on a browser through a <script> tag, `accedoOne` is a global variable
 // so you do not need to import or require anything.
-import accedoOne from '@accedo/accedo-one';
+import accedoOne from '@rawfishindustries/accedo-one';
 
 const client = accedoOne({
   appKey: 'YOUR_ACCEDO_ONE_APPLICATION_KEY',
@@ -98,9 +93,9 @@ You should create a new client for every device that needs to access the Accedo 
 
 :warning: **DO NOT** reuse a single client, in your Node server, to relay requests from various consumers.
 
-If you are triggering some Accedo One API calls in response to server requests, **you should create a new client every time**, by using the factory and reusing your application key and the consumer's deviceId (typically you would persist a consumer deviceId via the cookies, or as a request parameter in your server APIs - unless the device lets you use some unique ID like a MAC address).
+If you are triggering some Accedo One API calls in response to server requests, **you should create a new client every time**, by using the factory.
 
-:bulb: Note again, the middleware (see above) does that work for you, so it's best to use it whenever possible.
+:bulb: You can reuse the same session on each client generated on the node instance with the `useSharedSession` flag
 
 ### Create a new Accedo One session
 
@@ -144,7 +139,6 @@ The sample includes the polyfills necessary for older browsers like IE11 (those 
 * [Accedo One homepage](https://www.accedo.tv/one)
 * [Accedo One help center](https://support.one.accedo.tv)
 * [Accedo One API documentation](https://developer.one.accedo.tv)
-* [The Express-compatible middleware](https://github.com/Accedo-Products/accedo-one-sdk-express) that relies on this library.
 
 ## Unit Tests
 

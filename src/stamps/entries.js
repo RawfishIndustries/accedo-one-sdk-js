@@ -1,51 +1,9 @@
-const qs = require('qs');
 const sessionStamp = require('./session');
 const { grab } = require('../apiHelper');
-
-function getPathWithQs(path, params = {}) {
-  const {
-    id,
-    typeId,
-    alias,
-    typeAlias,
-    preview,
-    at,
-    offset,
-    size,
-    locale,
-  } = params;
-  const qsParams = {};
-  // The id array must be turned into CSV
-  if (id && Array.isArray(id)) {
-    qsParams.id = id.join(',');
-  }
-  // The alias array must be turned into CSV
-  if (alias && Array.isArray(alias)) {
-    qsParams.alias = alias.join(',');
-  }
-  // typeId must be turned into CSV
-  if (typeId && Array.isArray(typeId)) {
-    qsParams.typeId = typeId.join(',');
-  }
-  // preview is only useful when true
-  if (preview) {
-    qsParams.preview = true;
-  }
-  // at is either a string, or a method with toISOString (like a Date) that we use for formatting
-  if (typeof at === 'string') {
-    qsParams.at = at;
-  } else if (at && at.toISOString) {
-    qsParams.at = at.toISOString();
-  }
-  // Add curated and non-curated params
-  const queryString = qs.stringify(
-    Object.assign({}, qsParams, { typeAlias, offset, size, locale })
-  );
-  return `${path}?${queryString}`;
-}
+const { composePathWithQSFromParams } = require('../urlComposer');
 
 function request(path, params) {
-  const pathWithQs = getPathWithQs(path, params);
+  const pathWithQs = composePathWithQSFromParams(path, params);
   return this.withSessionHandling(() => grab(pathWithQs, this.config));
 }
 
@@ -59,6 +17,7 @@ const stamp = sessionStamp.compose({
      * @param {boolean} [params.preview] when true, get the preview version
      * @param {string|date} [params.at] when given, get the version at the given time
      * @param {array} [params.id] an array of entry ids (strings)
+     * @param {string} [params.gid] used for whitelisting
      * @param {array} [params.alias] an array of entry aliases (strings)
      * @param {array} [params.typeId] only return entries of the given type ids (strings)
      * @param {string} [params.typeAlias] only return entries whose entry type has this alias
@@ -77,6 +36,7 @@ const stamp = sessionStamp.compose({
      * @param {object} [params] a parameters object
      * @param {boolean} [params.preview] when true, get the preview version
      * @param {string|date} [params.at] when given, get the version at the given time
+     * @param {string} [params.gid] used for whitelisting
      * @param {string} [params.locale] if available, get the version for the given locale (defaults to the default locale)
      * @return {promise}  a promise of an entry (object)
      */
@@ -89,6 +49,7 @@ const stamp = sessionStamp.compose({
      * @param {object} alias the entry alias
      * @param {object} [params] a parameters object
      * @param {boolean} [params.preview] when true, get the preview version
+     * @param {string} [params.gid] used for whitelisting
      * @param {string|date} [params.at] when given, get the version at the given time
      * @param {string} [params.locale] if available, get the version for the given locale (defaults to the default locale)
      * @return {promise}  a promise of an entry (object)

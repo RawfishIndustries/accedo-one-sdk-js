@@ -1,7 +1,7 @@
 {
-  "name": "@accedo/accedo-one",
-  "version": "4.0.2",
-  "description": "The official Accedo One SDK for Node.js and browsers (previously known as AppGrid)",
+  "name": "@rawfishindustries/accedo-one",
+  "version": "4.1.0",
+  "description": "Rawfish fork of the official Accedo One SDK",
   "main": "src/node/index.js",
   "browser": "dist/accedo-one.umd.min.js",
   "scripts": {
@@ -18,9 +18,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/Accedo-Products/accedo-one-sdk-js.git"
+    "url": "git+ssh://git@github.com/RawfishIndustries/accedo-one-sdk-js.git"
   },
   "keywords": [
+    "Rawfish",
     "AppGrid",
     "Accedo",
     "Accedo One",
@@ -28,12 +29,13 @@
     "ES6",
     "Javascript"
   ],
-  "author": "Accedo, AB",
+  "author": "Accedo, AB, Rawfish",
   "contributors": [
     "Jason Dujardin-Terry",
     "Gregory Desfour",
     "Nicolas Nannoni",
-    "Oskar Nordgren"
+    "Oskar Nordgren",
+    "Elia Camposilvan"
   ],
   "license": "Apache-2.0",
   "engines": {
@@ -72,7 +74,7 @@
     "uuid": "^3.2.1"
   },
   "bugs": {
-    "url": "https://github.com/Accedo-Products/accedo-one-sdk-js/issues"
+    "url": "https://github.com/RawfishIndustries/accedo-one-sdk-js/issues"
   },
   "directories": {
     "doc": "docs",
