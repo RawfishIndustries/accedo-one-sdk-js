@@ -88,13 +88,14 @@ const stamp = stampit({
      * @private
      * @param {object} res the api response
      * @param {function} next a function that returns a promise
+     * @param {string} previousSessionKey the sessionKey used on the failed request
      * @returns {promise} a promise of the result of the next function
      */
-    refreshAndRefetch(res, next) {
+    refreshAndRefetch(res, next, previousSessionKey) {
       if (res && res.status === 401) {
-        return this.getSessionPromise()
+        return Promise.resolve(this.getSessionPromise())
           .then(newSessionKey => {
-            if (newSessionKey === this.getSessionKey()) {
+            if (!newSessionKey || newSessionKey === previousSessionKey) {
               /*
                * refreshing the session only if `getSessionPromise` resolves to
                * the same value as before. This is necessary to avoid duplicating
@@ -127,7 +128,9 @@ const stamp = stampit({
           return this.createSession().then(next);
         }
 
-        return next().catch(res => this.refreshAndRefetch(res, next));
+        return next().catch(res =>
+          this.refreshAndRefetch(res, next, sessionKey)
+        );
       });
     },
   },
