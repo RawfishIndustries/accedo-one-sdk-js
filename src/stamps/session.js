@@ -77,7 +77,7 @@ const stamp = stampit({
      * @private
      * @return {void}
      */
-    invalidateSession() {
+    clearCurrentSession() {
       this.config.sessionKey = null;
       this.setSessionPromise(null);
     },
@@ -98,10 +98,9 @@ const stamp = stampit({
               /*
                * refreshing the session only if `getSessionPromise` resolves to
                * the same value as before. This is necessary to avoid duplicating
-               * session requests while performing multiple concurrent data requests.
+               * session requests while performing concurrent data fetching.
                */
-              this.setSessionPromise(null);
-              this.config.sessionKey = null;
+              this.clearCurrentSession();
               return this.createSession();
             }
             this.config.sessionKey = newSessionKey;
@@ -113,7 +112,7 @@ const stamp = stampit({
     },
 
     /**
-     * If sessionPromise is valorized, calls the next function, then:
+     * If sessionKey is found trough sessionPromise, calls the next function, then:
      * - If this failed with a 401 (unauthorized), create a session then retry
      * - Otherwise returns a promise of that function's results
      * If there was no sessionKey, create a session before attempting the next function.
