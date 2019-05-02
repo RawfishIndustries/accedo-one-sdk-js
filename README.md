@@ -53,7 +53,7 @@ You may also want to refer to the [Accedo One Rest API documentation](https://de
 
 ## Installation
 
-`npm install --save @@rawfishindustries/accedo-one` (or, for yarn users: `yarn add @rawfishindustries/accedo-one`)
+`npm install --save @rawfishindustries/accedo-one` (or, for yarn users: `yarn add @rawfishindustries/accedo-one`)
 
 Then you can use the default export to get a factory:
 ```js
