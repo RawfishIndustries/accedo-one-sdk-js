@@ -1,3 +1,7 @@
+# 4.1.2
+
+- FIX: reusing same session on concurrent requests done by the same client
+
 # 4.1.1
 
 - FIX: documentation: npm install statement should not have double @
