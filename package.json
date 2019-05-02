@@ -1,6 +1,6 @@
 {
   "name": "@rawfishindustries/accedo-one",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "Rawfish fork of the official Accedo One SDK",
   "main": "src/node/index.js",
   "browser": "dist/accedo-one.umd.min.js",
