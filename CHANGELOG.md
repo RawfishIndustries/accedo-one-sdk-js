@@ -1,3 +1,9 @@
+# 4.1.0
+
+- FEATURE: addition of `useSharedSession` config flag to reuse the same session between different clients on server side
+- FEATURE: addition of `sessionKeyInQueryString` config flag to pass sessionKey in query string on requests
+- FEATURE: addition of `gid` config param on all accedo data fetching methods
+
 # 4.0.2
 
 - FIX: update a dependency (stampit, now @stamp/it) to avoid a potential vulnerability detected by Snyk
