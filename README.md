@@ -95,7 +95,7 @@ You should create a new client for every device that needs to access the Accedo 
 
 If you are triggering some Accedo One API calls in response to server requests, **you should create a new client every time**, by using the factory.
 
-:bulb: You can reuse the same session on each client generated on the node instance with the `useSharedSession` flag
+:bulb: You can reuse the same session on each client generated on the node instance with the `useSharedSession` flag
 
 ### Create a new Accedo One session
 
