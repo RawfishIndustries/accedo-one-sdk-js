@@ -1,3 +1,7 @@
+# 4.1.1
+
+- FIX: documentation: npm install statement should not have double @
+
 # 4.1.0
 
 - FEATURE: addition of `useSharedSession` config flag to reuse the same session between different clients on server side
